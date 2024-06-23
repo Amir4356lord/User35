@@ -1,0 +1,78 @@
+{                                                                             "route": {
+                "geoip": {                                                            "path": "geo-assets\\sagernet-sing-geoip-geoip.db"
+                },                                                                    "geosite": {
+                "path": "geo-assets\\sagernet-sing-geosite-geosite.db"                },
+                "rules": [                                                            {
+                        "inbound": "dns-in",                                                  "outbound": "dns-out"
+                },                                                                    {
+                        "port": 53,                                                           "outbound": "dns-out"
+                },                                                                    {
+                        "clash_mode": "Direct",                                               "outbound": "direct"
+                },                                                                    {
+                        "clash_mode": "Global",                                               "outbound": "select"
+                }                                                                     ],
+                "auto_detect_interface": true,                                        "override_android_vpn": true
+        },                                                                    "outbounds": [
+                {                                                                     "type": "selector",
+                "tag": "select",                                                      "outbounds": [
+                        "auto",                                                               "IP->Iran, kolandone",
+                        "IP->Main, kolandone"                                         ],
+                "default": "auto"                                                     },
+                {                                                                     "type": "urltest",
+                "tag": "auto",
+                "outbounds": [
+                        "IP->Iran, kolandone",
+                        "IP->Main, kolandone"
+                ],
+                "url": "http://cp.cloudflare.com/",
+                "interval": "10m0s"
+                },
+                {
+                "type": "wireguard",
+                "tag": "IP->Iran, kolandone",
+                "local_address": [
+                        "172.16.0.2/32",
+                        "2606:4700:110:8c33:fce9:b14f:62ce:8b0f/128"
+                ],
+                "private_key": "yBTRkaXjZyw9GXnQ4jrfh0pYtTGwjYt7B4ajHSClx2A=",
+                "server": "162.159.192.52",
+                "server_port": 500,
+                "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                "reserved": [104,38,34],
+                "mtu": 1280,
+                "fake_packets": "5-10"
+                },
+                {
+                "type": "wireguard",
+                "tag": "IP->Main, kolandone",
+                "detour": "IP->Iran, kolandone",
+                "local_address": [
+                        "172.16.0.2/32",
+                        "2606:4700:110:875f:be31:6081:3cc5:eb3e/128"
+                ],
+                "private_key": "0J8gW8G1NT1sdJEv25KK/z2NSYOkLROjMSlcVyN1Y2E=",
+                "server": "162.159.192.52",
+                "server_port": 500,
+                "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                "reserved": [214,118,122],
+                "mtu": 1280,
+                "fake_packets": "5-10"
+                },
+                {
+                "type": "dns",
+                "tag": "dns-out"
+                },
+                {
+                "type": "direct",
+                "tag": "direct"
+                },
+                {
+                "type": "direct",
+                "tag": "bypass"
+                },
+                {
+                "type": "block",
+                "tag": "block"
+                }
+        ]
+        }
